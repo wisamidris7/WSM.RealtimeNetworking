@@ -15,7 +15,6 @@ public class Client
     private byte[]? receiveBuffer;
     public int id { get; private set; } = 0;
 
-    public RealtimeNetworking RealtimeNetworking { get; set; }
     public string sendToken { get; private set; } = "xxxxx";
 
     public string receiveToken { get; private set; } = "xxxxx";
@@ -27,10 +26,12 @@ public class Client
     private bool _initialized = false;
     public Settings settings => new();
     private readonly Receiver _receiver;
-    public Client()
+    private readonly RealtimeNetworking _realtimeNetworking;
+    public Client(RealtimeNetworking realtimeNetworking)
     {
         _initialized = true;
-        _receiver = new(this, RealtimeNetworking!);
+        _receiver = new(this, realtimeNetworking!);
+        _realtimeNetworking = realtimeNetworking;
     }
 
     private void OnApplicationQuit()
@@ -80,13 +81,13 @@ public class Client
         } catch (Exception)
         {
             _connecting = false;
-            RealtimeNetworking.Connection(false);
+            _realtimeNetworking.Connection(false);
             return;
         }
         if (!waiting || !socket.Connected)
         {
             _connecting = false;
-            RealtimeNetworking.Connection(false);
+            _realtimeNetworking.Connection(false);
             return;
         }
     }
@@ -189,7 +190,7 @@ public class Client
         this.id = id;
         sendToken = token1;
         receiveToken = token2;
-        RealtimeNetworking.Connection(true);
+        _realtimeNetworking.Connection(true);
     }
 
 }

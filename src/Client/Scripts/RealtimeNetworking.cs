@@ -35,11 +35,10 @@ public class RealtimeNetworking
     public delegate void BytesCallback(int id, byte[] value);
     #endregion
 
-    private readonly Client _client;
+    private Client _client;
     public RealtimeNetworking(Client client)
     {
         _client = client;
-        _client.RealtimeNetworking = this;
     }
     public void Connect()
     {
@@ -60,4 +59,9 @@ public class RealtimeNetworking
     public void ReceiveQuaternion(int id, Quaternion value) => OnQuaternionReceived?.Invoke(id, value);
     public void ReceiveByte(int id, byte value) => OnByteReceived?.Invoke(id, value);
     public void ReceiveBytes(int id, byte[] value) => OnByteArrayReceived?.Invoke(id, value);
+
+    public void SetClient(Client client)
+    {
+        _client = client;
+    }
 }

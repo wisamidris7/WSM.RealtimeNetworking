@@ -1,21 +1,17 @@
 ﻿using WSM.ServerRealtime;
 using WSM.ServerRealtime.Scripts;
 
-bool isRunning = false;
-float updatePeriod = 1000f / Terminal.updatesPerSecond;
 
 AppDomain.CurrentDomain.UnhandledException += GlobalUnhandledExceptionHandler;
 try
 {
     Console.Title = "Server Console";
-    isRunning = true;
     Server.Start(Terminal.maxPlayers, Terminal.port);
-} 
-catch (Exception ex)
+} catch (Exception ex)
 {
     Tools.LogError(ex.Message, ex.StackTrace);
 }
-
+Console.ReadKey();
 
 void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
 {
