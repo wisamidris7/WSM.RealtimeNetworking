@@ -5,19 +5,11 @@ namespace WSM.ServerRealtime;
 
 internal class Terminal
 {
-
-    #region Update
     public const int updatesPerSecond = 30;
     public static void Start()
     {
         Console.WriteLine("Server Started.");
     }
-
-    public static void Update()
-    {
-
-    }
-    #endregion
 
     #region Connection
     public const int maxPlayers = 100000;

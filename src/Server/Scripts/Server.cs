@@ -10,10 +10,10 @@ internal class Server
     public static int Port { get; private set; }
     public static Dictionary<int, Client> clients = [];
     public delegate void PacketHandler(int clientID, Packet packet);
-    public static required Dictionary<int, PacketHandler> packetHandlers;
+    public static Dictionary<int, PacketHandler> packetHandlers;
 
-    private static required TcpListener tcpListener;
-    private static required UdpClient udpListener;
+    private static TcpListener tcpListener;
+    private static UdpClient udpListener;
 
     public static void Start(int maxPlayers, int port)
     {

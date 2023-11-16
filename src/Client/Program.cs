@@ -1,38 +1,15 @@
-﻿using WSM.ClientRealtime.Scripts;
+﻿using WSM.ClientRealtime;
+using WSM.ClientRealtime.Scripts;
 
-await Task.Delay(1000);
-Client client = new();
-RealtimeNetworking instance = RealtimeNetworking.instance;
-RealtimeNetworking.OnDisconnectedFromServer += Disconnected;
-RealtimeNetworking.OnConnectingToServerResult += ConnectResult;
-RealtimeNetworking.OnPacketReceived += PacketReceived;
+#if DEBUG
+await Task.Delay(1000); // This Delay You Can Remove But This Required For Testing In Debug
+#endif
 
-RealtimeNetworking.Connect();
+var client = new Client();
+var networkingInstance = new RealtimeNetworking(client);
+networkingInstance.OnDisconnectedFromServer += Terminal.Disconnected;
+networkingInstance.OnConnectingToServerResult += Terminal.Connected;
+networkingInstance.OnPacketReceived += Terminal.PacketReceived;
+networkingInstance.Connect();
 
 Console.ReadKey();
-void Disconnected()
-{
-    Console.WriteLine("Disconnected from server.");
-}
-
-void ConnectResult(bool successful)
-{
-    if (successful)
-    {
-        Console.WriteLine("Connected to server successfully.");
-        Sender.TCP_Send(123, "Hello world");
-    } else
-    {
-        Console.WriteLine("Failed to connect the server.");
-    }
-}
-
-void PacketReceived(Packet packet)
-{
-    int code = packet.ReadInt();
-    if (code == 555)
-    {
-        string time = packet.ReadString();
-        Console.WriteLine("Server Time: " + time);
-    }
-}

@@ -5,20 +5,20 @@ public class RealtimeNetworking
 {
 
     #region Events
-    public static event NoCallback OnDisconnectedFromServer;
-    public static event ActionCallback OnConnectingToServerResult;
-    public static event PacketCallback OnPacketReceived;
-    public static event NullCallback OnEmptyReceived;
-    public static event StringCallback OnStringReceived;
-    public static event IntegerCallback OnIntegerReceived;
-    public static event BooleanCallback OnBooleanReceived;
-    public static event FloatCallback OnFloatReceived;
-    public static event ShortCallback OnShortReceived;
-    public static event LongCallback OnLongReceived;
-    public static event Vector3Callback OnVector3Received;
-    public static event QuaternionCallback OnQuaternionReceived;
-    public static event ByteCallback OnByteReceived;
-    public static event BytesCallback OnByteArrayReceived;
+    public event NoCallback OnDisconnectedFromServer;
+    public event ActionCallback OnConnectingToServerResult;
+    public event PacketCallback OnPacketReceived;
+    public event NullCallback OnEmptyReceived;
+    public event StringCallback OnStringReceived;
+    public event IntegerCallback OnIntegerReceived;
+    public event BooleanCallback OnBooleanReceived;
+    public event FloatCallback OnFloatReceived;
+    public event ShortCallback OnShortReceived;
+    public event LongCallback OnLongReceived;
+    public event Vector3Callback OnVector3Received;
+    public event QuaternionCallback OnQuaternionReceived;
+    public event ByteCallback OnByteReceived;
+    public event BytesCallback OnByteArrayReceived;
     public delegate void ActionCallback(bool successful);
     public delegate void NoCallback();
     public delegate void PacketCallback(Packet packet);
@@ -35,104 +35,29 @@ public class RealtimeNetworking
     public delegate void BytesCallback(int id, byte[] value);
     #endregion
 
-    private bool _initialized = false;
-
-    private static RealtimeNetworking? _instance = null;
-    public static RealtimeNetworking instance
+    private readonly Client _client;
+    public RealtimeNetworking(Client client)
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new();
-                _instance.Initialize();
-            }
-            return _instance;
-        }
+        _client = client;
+        _client.RealtimeNetworking = this;
+    }
+    public void Connect()
+    {
+        _client.ConnectToServer();
     }
 
-    private void Initialize()
-    {
-        if (_initialized)
-        {
-            return;
-        }
-        _initialized = true;
-    }
-
-    public static void Connect()
-    {
-        Client.instance.ConnectToServer();
-    }
-
-    public void _Connection(bool result)
-    {
-        OnConnectingToServerResult?.Invoke(result);
-    }
-
-    public void _Disconnected()
-    {
-        OnDisconnectedFromServer?.Invoke();
-    }
-
-    public void _ReceivePacket(Packet packet)
-    {
-        OnPacketReceived?.Invoke(packet);
-    }
-
-    public void _ReceiveNull(int id)
-    {
-        OnEmptyReceived?.Invoke(id);
-    }
-
-    public void _ReceiveString(int id, string value)
-    {
-        OnStringReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveInteger(int id, int value)
-    {
-        OnIntegerReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveFloat(int id, float value)
-    {
-        OnFloatReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveBoolean(int id, bool value)
-    {
-        OnBooleanReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveShort(int id, short value)
-    {
-        OnShortReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveLong(int id, long value)
-    {
-        OnLongReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveVector3(int id, Vector3 value)
-    {
-        OnVector3Received?.Invoke(id, value);
-    }
-
-    public void _ReceiveQuaternion(int id, Quaternion value)
-    {
-        OnQuaternionReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveByte(int id, byte value)
-    {
-        OnByteReceived?.Invoke(id, value);
-    }
-
-    public void _ReceiveBytes(int id, byte[] value)
-    {
-        OnByteArrayReceived?.Invoke(id, value);
-    }
-
+    public void Connection(bool result) => OnConnectingToServerResult?.Invoke(result);
+    public void Disconnected() => OnDisconnectedFromServer?.Invoke();
+    public void ReceivePacket(Packet packet) => OnPacketReceived?.Invoke(packet);
+    public void ReceiveNull(int id) => OnEmptyReceived?.Invoke(id);
+    public void ReceiveString(int id, string value) => OnStringReceived?.Invoke(id, value);
+    public void ReceiveInteger(int id, int value) => OnIntegerReceived?.Invoke(id, value);
+    public void ReceiveFloat(int id, float value) => OnFloatReceived?.Invoke(id, value);
+    public void ReceiveBoolean(int id, bool value) => OnBooleanReceived?.Invoke(id, value);
+    public void ReceiveShort(int id, short value) => OnShortReceived?.Invoke(id, value);
+    public void ReceiveLong(int id, long value) => OnLongReceived?.Invoke(id, value);
+    public void ReceiveVector3(int id, Vector3 value) => OnVector3Received?.Invoke(id, value);
+    public void ReceiveQuaternion(int id, Quaternion value) => OnQuaternionReceived?.Invoke(id, value);
+    public void ReceiveByte(int id, byte value) => OnByteReceived?.Invoke(id, value);
+    public void ReceiveBytes(int id, byte[] value) => OnByteArrayReceived?.Invoke(id, value);
 }
